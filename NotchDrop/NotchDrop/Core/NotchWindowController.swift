@@ -13,6 +13,10 @@ class NotchWindowController {
     private let notchInfo: NotchInfo
     private var dropTargetView: DropTargetView?
 
+    // Metal animation layer
+    private var metalAnimationView: MetalAnimationView?
+    private var contentHostingView: NSHostingView<AnyView>?
+
     // Collapsed = original notch size, Expanded = scaled up
     private let expandedWidth: CGFloat = 320
     private let expandedHeight: CGFloat = 340
@@ -28,9 +32,23 @@ class NotchWindowController {
     }
 
     private func setupPanel() {
+        // The panel is always at expanded size. The Metal shader
+        // controls the visible shape via a signed-distance function,
+        // starting as the notch shape and animating to the full panel.
+        let screenMidX = notchInfo.screenFrame.midX
+        let panelX = screenMidX - expandedWidth / 2
+        let panelY = notchInfo.screenFrame.maxY - expandedHeight
+
+        let panelFrame = NSRect(
+            x: panelX,
+            y: panelY,
+            width: expandedWidth,
+            height: expandedHeight
+        )
+
         // Create non-activating panel -- critical: doesn't steal focus
         let panel = NSPanel(
-            contentRect: notchInfo.notchRect,
+            contentRect: panelFrame,
             styleMask: [.nonactivatingPanel, .borderless],
             backing: .buffered,
             defer: false
@@ -44,55 +62,103 @@ class NotchWindowController {
         panel.isMovable = false
         panel.hidesOnDeactivate = false
 
-        // Start invisible (notch handles its own appearance)
-        panel.alphaValue = 0
+        // Panel is always visible at full size; Metal shader controls
+        // what is rendered.
+        panel.alphaValue = 1
+
+        // Start ignoring mouse events so the collapsed panel does not
+        // block clicks on the menu bar or other windows.
+        panel.ignoresMouseEvents = true
 
         self.panel = panel
+
+        // Set up the Metal animation view as the background layer
+        setupMetalBackground(in: panel, frame: panelFrame)
+
         panel.orderFront(nil)
     }
 
+    private func setupMetalBackground(in panel: NSPanel, frame: NSRect) {
+        let containerView = NSView(frame: NSRect(origin: .zero, size: frame.size))
+        containerView.wantsLayer = true
+        containerView.autoresizingMask = [.width, .height]
+
+        // Metal animation view fills the entire panel
+        let metalView = MetalAnimationView(frame: NSRect(origin: .zero, size: frame.size))
+        metalView.autoresizingMask = [.width, .height]
+        metalView.notchWidth = Float(notchInfo.notchRect.width)
+        metalView.notchHeight = Float(notchInfo.notchRect.height)
+        metalView.expandedWidth = Float(expandedWidth)
+        metalView.expandedHeight = Float(expandedHeight)
+        metalView.cornerRadius = 20
+
+        // Start in collapsed state
+        metalView.progress = 0
+        metalView.targetProgress = 0
+
+        // When the collapse animation finishes, stop intercepting mouse
+        // events so the panel does not block the menu bar or other windows.
+        metalView.onCollapseComplete = { [weak self] in
+            self?.panel?.ignoresMouseEvents = true
+        }
+
+        self.metalAnimationView = metalView
+        containerView.addSubview(metalView)
+
+        panel.contentView = containerView
+    }
+
     func expand() {
-        guard !isExpanded, let panel = panel else { return }
+        guard !isExpanded else { return }
         isExpanded = true
 
-        let screenMidX = notchInfo.screenFrame.midX
-        let newX = screenMidX - expandedWidth / 2
-        let newY = notchInfo.screenFrame.maxY - expandedHeight
+        // Allow mouse events so the user can interact with the panel
+        panel?.ignoresMouseEvents = false
 
+        // Drive the Metal shader to expand
+        metalAnimationView?.expand()
+
+        // Fade in the SwiftUI content with a slight delay so the
+        // liquid shape is visible first
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.3
-            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            panel.animator().setFrame(
-                NSRect(x: newX, y: newY, width: expandedWidth, height: expandedHeight),
-                display: true
-            )
-            panel.animator().alphaValue = 1
+            context.duration = 0.25
+            context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            self.contentHostingView?.animator().alphaValue = 1
         }
     }
 
     func collapse() {
         // Don't collapse while a drag is hovering over the panel
         guard !isDragHovering else { return }
-        guard isExpanded, let panel = panel else { return }
+        guard isExpanded else { return }
         isExpanded = false
 
         DragState.shared.isDragActive = false
 
+        // Fade out the SwiftUI content first
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.25
-            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            panel.animator().setFrame(notchInfo.notchRect, display: true)
-            panel.animator().alphaValue = 0
+            context.duration = 0.15
+            context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            self.contentHostingView?.animator().alphaValue = 0
         }
+
+        // Drive the Metal shader to collapse
+        metalAnimationView?.collapse()
     }
 
     func setContent(_ view: some View) {
-        // Create the DropTargetView as a container that sits behind
-        // the SwiftUI hosting view, intercepting drag events.
-        let hostingView = NSHostingView(rootView: view)
-        hostingView.translatesAutoresizingMaskIntoConstraints = false
+        guard let panel = panel,
+              let containerView = panel.contentView else { return }
 
-        let dropView = DropTargetView(frame: .zero)
+        // Create the DropTargetView as a container that sits on top of
+        // the Metal background, intercepting drag events.
+        let hostingView = NSHostingView(rootView: AnyView(view))
+        hostingView.translatesAutoresizingMaskIntoConstraints = false
+        // Start transparent; expand() fades it in
+        hostingView.alphaValue = 0
+        self.contentHostingView = hostingView
+
+        let dropView = DropTargetView(frame: NSRect(origin: .zero, size: containerView.bounds.size))
         dropView.translatesAutoresizingMaskIntoConstraints = false
         dropView.addSubview(hostingView)
 
@@ -116,7 +182,16 @@ class NotchWindowController {
         }
 
         self.dropTargetView = dropView
-        panel?.contentView = dropView
+
+        // Add the drop/content view on top of the Metal view
+        containerView.addSubview(dropView)
+
+        NSLayoutConstraint.activate([
+            dropView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            dropView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            dropView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            dropView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+        ])
     }
 
     var panelFrame: NSRect {
