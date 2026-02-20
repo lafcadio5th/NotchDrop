@@ -11,6 +11,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var notchWindowController: NotchWindowController?
+    private var hoverMonitor: HoverMonitor?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Create a minimal menu bar icon
@@ -41,10 +42,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         notchWindowController?.setContent(placeholderView)
 
-        // For testing: expand after 2 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.notchWindowController?.expand()
-        }
+        // Set up hover monitoring for expand/collapse
+        hoverMonitor = HoverMonitor(
+            notchInfo: notchInfo,
+            expandedFrameProvider: { [weak self] in
+                self?.notchWindowController?.panelFrame ?? .zero
+            },
+            onHoverEnter: { [weak self] in
+                self?.notchWindowController?.expand()
+            },
+            onHoverExit: { [weak self] in
+                self?.notchWindowController?.collapse()
+            }
+        )
+        hoverMonitor?.start()
 
         NSLog("NotchDrop launched successfully")
     }
