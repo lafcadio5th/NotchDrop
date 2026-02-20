@@ -11,11 +11,16 @@ import SwiftUI
 class NotchWindowController {
     private var panel: NSPanel?
     private let notchInfo: NotchInfo
+    private var dropTargetView: DropTargetView?
 
     // Collapsed = original notch size, Expanded = scaled up
     private let expandedWidth: CGFloat = 320
     private let expandedHeight: CGFloat = 340
     private(set) var isExpanded = false
+
+    /// When true, the panel stays expanded because a drag is hovering
+    /// over it, even if the mouse cursor has left the hover zone.
+    private(set) var isDragHovering = false
 
     init(notchInfo: NotchInfo) {
         self.notchInfo = notchInfo
@@ -66,8 +71,12 @@ class NotchWindowController {
     }
 
     func collapse() {
+        // Don't collapse while a drag is hovering over the panel
+        guard !isDragHovering else { return }
         guard isExpanded, let panel = panel else { return }
         isExpanded = false
+
+        DragState.shared.isDragActive = false
 
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.25
@@ -78,10 +87,79 @@ class NotchWindowController {
     }
 
     func setContent(_ view: some View) {
-        panel?.contentView = NSHostingView(rootView: view)
+        // Create the DropTargetView as a container that sits behind
+        // the SwiftUI hosting view, intercepting drag events.
+        let hostingView = NSHostingView(rootView: view)
+        hostingView.translatesAutoresizingMaskIntoConstraints = false
+
+        let dropView = DropTargetView(frame: .zero)
+        dropView.translatesAutoresizingMaskIntoConstraints = false
+        dropView.addSubview(hostingView)
+
+        NSLayoutConstraint.activate([
+            hostingView.leadingAnchor.constraint(equalTo: dropView.leadingAnchor),
+            hostingView.trailingAnchor.constraint(equalTo: dropView.trailingAnchor),
+            hostingView.topAnchor.constraint(equalTo: dropView.topAnchor),
+            hostingView.bottomAnchor.constraint(equalTo: dropView.bottomAnchor),
+        ])
+
+        dropView.onDragEntered = { [weak self] in
+            self?.handleDragEntered()
+        }
+
+        dropView.onDragExited = { [weak self] in
+            self?.handleDragExited()
+        }
+
+        dropView.onFilesDropped = { [weak self] urls in
+            self?.handleFilesDrop(urls)
+        }
+
+        self.dropTargetView = dropView
+        panel?.contentView = dropView
     }
 
     var panelFrame: NSRect {
         panel?.frame ?? .zero
+    }
+
+    // MARK: - Drag Handling
+
+    private func handleDragEntered() {
+        isDragHovering = true
+        DragState.shared.isDragActive = true
+
+        if !isExpanded {
+            expand()
+        }
+    }
+
+    private func handleDragExited() {
+        isDragHovering = false
+        DragState.shared.isDragActive = false
+
+        // Collapse after a brief delay to avoid flickering if the
+        // user drags back in quickly.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            guard let self, !self.isDragHovering else { return }
+            self.collapse()
+        }
+    }
+
+    private func handleFilesDrop(_ urls: [URL]) {
+        isDragHovering = false
+        DragState.shared.isDragActive = false
+
+        for url in urls {
+            _ = FileShelfManager.shared.addFile(from: url)
+        }
+
+        NSLog("Dropped \(urls.count) file(s) onto NotchDrop")
+
+        // Keep panel expanded briefly so the user sees the result,
+        // then collapse.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.collapse()
+        }
     }
 }

@@ -24,41 +24,94 @@ enum NotchTab: String, CaseIterable {
 /// The background is a dark glassmorphic panel with square top
 /// corners (connecting seamlessly to the notch) and rounded bottom
 /// corners (20px radius).
+///
+/// When a file drag is in progress (``DragState/isDragActive``),
+/// a blue dashed border overlay is shown on top of the content,
+/// prompting the user to drop files.
 struct NotchExpandedView: View {
     @State private var selectedTab: NotchTab = .todos
 
     @ObservedObject private var todoManager = TodoManager.shared
     @ObservedObject private var noteManager = NoteManager.shared
     @ObservedObject private var fileShelfManager = FileShelfManager.shared
+    @ObservedObject private var dragState = DragState.shared
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Camera notch spacer — leave room for the physical camera area
-            Spacer()
-                .frame(height: 32)
+        ZStack {
+            VStack(spacing: 0) {
+                // Camera notch spacer — leave room for the physical camera area
+                Spacer()
+                    .frame(height: 32)
 
-            VStack(spacing: 10) {
-                // Quick input field
-                QuickInputView(selectedTab: $selectedTab)
+                VStack(spacing: 10) {
+                    // Quick input field
+                    QuickInputView(selectedTab: $selectedTab)
 
-                // Tab bar
-                tabBar
+                    // Tab bar
+                    tabBar
 
-                // Content area
-                contentArea
+                    // Content area
+                    contentArea
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                NotchBackground()
+            )
+
+            // Drop zone overlay
+            if dragState.isDragActive {
+                dropZoneOverlay
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            NotchBackground()
-        )
         .onAppear {
             todoManager.refresh()
             noteManager.refresh()
             fileShelfManager.refresh()
         }
+    }
+
+    // MARK: - Drop Zone Overlay
+
+    /// A blue dashed border overlay that appears when a file drag
+    /// is detected over the panel.
+    private var dropZoneOverlay: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "arrow.down.doc")
+                .font(.system(size: 32, weight: .light))
+                .foregroundStyle(.blue)
+
+            Text("Drop files here")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(.blue)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            UnevenRoundedRectangle(
+                topLeadingRadius: 0,
+                bottomLeadingRadius: 20,
+                bottomTrailingRadius: 20,
+                topTrailingRadius: 0
+            )
+            .fill(Color.blue.opacity(0.08))
+        )
+        .overlay(
+            UnevenRoundedRectangle(
+                topLeadingRadius: 0,
+                bottomLeadingRadius: 20,
+                bottomTrailingRadius: 20,
+                topTrailingRadius: 0
+            )
+            .strokeBorder(
+                style: StrokeStyle(lineWidth: 2, dash: [8, 4])
+            )
+            .foregroundStyle(.blue.opacity(0.6))
+        )
+        .padding(4)
+        .allowsHitTesting(false)
+        .transition(.opacity.animation(.easeInOut(duration: 0.2)))
     }
 
     // MARK: - Tab Bar

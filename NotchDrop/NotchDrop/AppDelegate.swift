@@ -12,6 +12,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var notchWindowController: NotchWindowController?
     private var hoverMonitor: HoverMonitor?
+    private var dragMonitor: DragMonitor?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Create a minimal menu bar icon
@@ -49,6 +50,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         )
         hoverMonitor?.start()
+
+        // Set up drag monitoring for file drops
+        // The DragMonitor provides a supplementary signal: when a
+        // system-wide file drag is detected, it expands the panel so
+        // the DropTargetView can receive the drag. The primary drag
+        // handling happens through DropTargetView's NSDraggingDestination.
+        dragMonitor = DragMonitor(
+            onDragBegan: { [weak self] in
+                self?.notchWindowController?.expand()
+                DragState.shared.isDragActive = true
+            },
+            onDragEnded: { [weak self] in
+                guard let self else { return }
+                DragState.shared.isDragActive = false
+                // Only collapse if the drag is not hovering over
+                // the panel (DropTargetView manages that state).
+                if !(self.notchWindowController?.isDragHovering ?? false) {
+                    self.notchWindowController?.collapse()
+                }
+            }
+        )
+        dragMonitor?.start()
 
         NSLog("NotchDrop launched successfully")
     }
