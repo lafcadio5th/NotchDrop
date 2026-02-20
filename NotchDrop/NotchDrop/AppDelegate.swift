@@ -32,15 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         notchWindowController = NotchWindowController(notchInfo: notchInfo)
 
-        // Temporary: set a placeholder view
-        let placeholderView = ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.black.opacity(0.95))
-            Text("NotchDrop")
-                .foregroundColor(.white)
-                .font(.headline)
-        }
-        notchWindowController?.setContent(placeholderView)
+        // Set the main expanded UI as the panel content
+        notchWindowController?.setContent(NotchExpandedView())
 
         // Set up hover monitoring for expand/collapse
         hoverMonitor = HoverMonitor(
