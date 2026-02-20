@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7FB744112F4822E4001D2291 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 7FB743D12F481900001D2291 /* GRDB */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7FB743B72F4817DA001D2291 /* NotchDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotchDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FB744112F4822E4001D2291 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = NotchDrop;
 			packageProductDependencies = (
+				7FB743D12F481900001D2291 /* GRDB */,
 			);
 			productName = NotchDrop;
 			productReference = 7FB743B72F4817DA001D2291 /* NotchDrop.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 7FB743AE2F4817DA001D2291;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7FB743D02F481900001D2291 /* XCRemoteSwiftPackageReference "GRDB" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7FB743B82F4817DA001D2291 /* Products */;
 			projectDirPath = "";
@@ -348,6 +357,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7FB743D02F481900001D2291 /* XCRemoteSwiftPackageReference "GRDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7FB743D12F481900001D2291 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7FB743D02F481900001D2291 /* XCRemoteSwiftPackageReference "GRDB" */;
+			productName = GRDB;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7FB743AF2F4817DA001D2291 /* Project object */;
 }
