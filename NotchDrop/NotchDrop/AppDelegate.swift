@@ -78,5 +78,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func openSettings() {
         NSLog("Settings clicked")
+        // Open the SwiftUI Settings scene window
+        NSApp.activate()
+        if #available(macOS 14, *) {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } else {
+            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        }
     }
 }

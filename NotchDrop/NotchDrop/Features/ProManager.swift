@@ -21,8 +21,15 @@ class ProManager: ObservableObject {
     static let shared = ProManager()
 
     /// Whether the user has an active Pro subscription.
-    /// StoreKit 2 integration will update this value.
+    /// Updated by StoreManager when purchase status changes.
     @Published var isPro: Bool = false
+
+    init() {
+        // Check purchase status on launch via StoreKit 2
+        Task {
+            await StoreManager.shared.checkPurchaseStatus()
+        }
+    }
 
     // MARK: - Free Tier Limits
 
