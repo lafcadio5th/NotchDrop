@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import ServiceManagement
 import StoreKit
 
 /// The Settings window content, displayed inside the macOS Settings scene.
 ///
 /// Sections:
-/// 1. General  -- Launch at login toggle (placeholder)
+/// 1. General  -- Launch at login toggle (via SMAppService)
 /// 2. Storage  -- File storage path, usage stats
 /// 3. AI       -- Provider selection, API key management
 /// 4. Account  -- Pro status, upgrade button, usage quotas
@@ -22,7 +23,7 @@ struct SettingsView: View {
     @ObservedObject private var aiService = AIService.shared
 
     @State private var storagePath: String = UserDefaults.standard.string(forKey: "fileStoragePath") ?? defaultStoragePath()
-    @State private var launchAtLogin: Bool = false
+    @State private var launchAtLoginError: String?
 
     @State private var todoCount: Int = 0
     @State private var noteCount: Int = 0
@@ -72,13 +73,36 @@ struct SettingsView: View {
 
     // MARK: - General
 
+    private var isLaunchAtLoginEnabled: Bool {
+        SMAppService.mainApp.status == .enabled
+    }
+
+    private func toggleLaunchAtLogin(_ enable: Bool) {
+        do {
+            if enable {
+                try SMAppService.mainApp.register()
+            } else {
+                try SMAppService.mainApp.unregister()
+            }
+            launchAtLoginError = nil
+        } catch {
+            NSLog("Launch at login error: \(error)")
+            launchAtLoginError = error.localizedDescription
+        }
+    }
+
     private var generalTab: some View {
         Form {
-            Toggle("Launch at login", isOn: $launchAtLogin)
-                .disabled(true)
-            Text("Launch at login will be available in a future update.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Toggle("Launch at login", isOn: Binding(
+                get: { isLaunchAtLoginEnabled },
+                set: { toggleLaunchAtLogin($0) }
+            ))
+
+            if let error = launchAtLoginError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
         }
         .padding()
     }
