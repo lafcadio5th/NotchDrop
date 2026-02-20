@@ -13,11 +13,13 @@ import StoreKit
 /// Sections:
 /// 1. General  -- Launch at login toggle (placeholder)
 /// 2. Storage  -- File storage path, usage stats
-/// 3. Account  -- Pro status, upgrade button, usage quotas
-/// 4. About    -- App version, credits
+/// 3. AI       -- Provider selection, API key management
+/// 4. Account  -- Pro status, upgrade button, usage quotas
+/// 5. About    -- App version, credits
 struct SettingsView: View {
     @ObservedObject private var proManager = ProManager.shared
     @ObservedObject private var storeManager = StoreManager.shared
+    @ObservedObject private var aiService = AIService.shared
 
     @State private var storagePath: String = UserDefaults.standard.string(forKey: "fileStoragePath") ?? defaultStoragePath()
     @State private var launchAtLogin: Bool = false
@@ -27,6 +29,12 @@ struct SettingsView: View {
     @State private var fileCount: Int = 0
     @State private var fileStorageSize: String = "0 MB"
     @State private var fileItemCount: Int = 0
+
+    // AI settings state
+    @State private var apiKeyInput: String = ""
+    @State private var keyStatus: String = ""
+    @State private var testResult: String = ""
+    @State private var isTesting: Bool = false
 
     var body: some View {
         TabView {
@@ -40,6 +48,11 @@ struct SettingsView: View {
                     Label("Storage", systemImage: "externaldrive")
                 }
 
+            aiTab
+                .tabItem {
+                    Label("AI", systemImage: "sparkles")
+                }
+
             accountTab
                 .tabItem {
                     Label("Account", systemImage: "person.crop.circle")
@@ -50,8 +63,11 @@ struct SettingsView: View {
                     Label("About", systemImage: "info.circle")
                 }
         }
-        .frame(width: 450, height: 300)
-        .onAppear { loadUsageStats() }
+        .frame(width: 450, height: 320)
+        .onAppear {
+            loadUsageStats()
+            updateKeyStatus()
+        }
     }
 
     // MARK: - General
@@ -88,6 +104,175 @@ struct SettingsView: View {
             }
         }
         .padding()
+    }
+
+    // MARK: - AI
+
+    private var aiTab: some View {
+        Form {
+            if !proManager.isPro {
+                VStack(spacing: 8) {
+                    Image(systemName: "lock.fill")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
+                    Text("AI features require a Pro subscription.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                    Button("Upgrade to Pro") {
+                        Task { try? await storeManager.purchase() }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+            } else {
+                // Provider selection
+                Picker("Provider", selection: $aiService.selectedProvider) {
+                    Text("OpenAI").tag("openai")
+                    Text("Anthropic").tag("anthropic")
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: aiService.selectedProvider) {
+                    updateKeyStatus()
+                    apiKeyInput = ""
+                    testResult = ""
+                }
+
+                // API key input
+                LabeledContent("API Key") {
+                    VStack(alignment: .trailing, spacing: 4) {
+                        SecureField("Enter API key...", text: $apiKeyInput)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(width: 250)
+
+                        HStack(spacing: 8) {
+                            Text(keyStatus)
+                                .font(.caption)
+                                .foregroundStyle(
+                                    AIKeyManager.shared.hasKey(for: aiService.selectedProvider) ? .green : .secondary
+                                )
+
+                            if !apiKeyInput.isEmpty {
+                                Button("Save Key") {
+                                    saveApiKey()
+                                }
+                                .controlSize(.small)
+                            }
+
+                            if AIKeyManager.shared.hasKey(for: aiService.selectedProvider) {
+                                Button("Remove") {
+                                    removeApiKey()
+                                }
+                                .controlSize(.small)
+                                .foregroundStyle(.red)
+                            }
+                        }
+                    }
+                }
+
+                // Test connection
+                LabeledContent("Connection") {
+                    HStack(spacing: 8) {
+                        Button {
+                            Task { await testConnection() }
+                        } label: {
+                            HStack(spacing: 4) {
+                                if isTesting {
+                                    ProgressView()
+                                        .controlSize(.mini)
+                                        .scaleEffect(0.8)
+                                }
+                                Text("Test Connection")
+                            }
+                        }
+                        .controlSize(.small)
+                        .disabled(
+                            !AIKeyManager.shared.hasKey(for: aiService.selectedProvider)
+                                || isTesting
+                        )
+
+                        if !testResult.isEmpty {
+                            Text(testResult)
+                                .font(.caption)
+                                .foregroundStyle(testResult.contains("Success") ? .green : .red)
+                        }
+                    }
+                }
+
+                // Provider info
+                Section {
+                    providerInfoView
+                }
+            }
+        }
+        .padding()
+    }
+
+    private var providerInfoView: some View {
+        Group {
+            switch aiService.selectedProvider {
+            case "openai":
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Model: gpt-4o-mini")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text("Get your API key at platform.openai.com")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            case "anthropic":
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Model: claude-3-5-haiku-latest")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text("Get your API key at console.anthropic.com")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            default:
+                EmptyView()
+            }
+        }
+    }
+
+    // MARK: - AI Helpers
+
+    private func saveApiKey() {
+        let trimmed = apiKeyInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        AIKeyManager.shared.saveKey(trimmed, for: aiService.selectedProvider)
+        apiKeyInput = ""
+        updateKeyStatus()
+        testResult = ""
+    }
+
+    private func removeApiKey() {
+        AIKeyManager.shared.deleteKey(for: aiService.selectedProvider)
+        updateKeyStatus()
+        testResult = ""
+    }
+
+    private func updateKeyStatus() {
+        if AIKeyManager.shared.hasKey(for: aiService.selectedProvider) {
+            keyStatus = "Key saved"
+        } else {
+            keyStatus = "No key configured"
+        }
+    }
+
+    private func testConnection() async {
+        isTesting = true
+        testResult = ""
+
+        let success = await aiService.testConnection()
+        isTesting = false
+
+        if success {
+            testResult = "Success"
+        } else {
+            testResult = aiService.lastError ?? "Failed"
+        }
     }
 
     // MARK: - Account
