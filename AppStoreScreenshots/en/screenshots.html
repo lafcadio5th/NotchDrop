@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NotchDrop — App Store Screenshots (EN)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: #111;
+      color: #fafafa;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 40px;
+      align-items: center;
+    }
+
+    /* Each screenshot is 1280x800 for Mac App Store */
+    .screenshot {
+      width: 1280px;
+      height: 800px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screenshot-label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════
+       Gradient Backgrounds
+       ═══════════════════════════════════════ */
+    .bg-1 {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    }
+    .bg-2 {
+      background: linear-gradient(135deg, #141e30 0%, #243b55 50%, #141e30 100%);
+    }
+    .bg-3 {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    .bg-4 {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #1f2937 100%);
+    }
+    .bg-5 {
+      background: linear-gradient(135deg, #1b1b2f 0%, #162447 50%, #1f4068 100%);
+    }
+
+    /* Subtle mesh overlay for depth */
+    .screenshot::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(96, 165, 250, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════
+       Headline + Subheading
+       ═══════════════════════════════════════ */
+    .headline {
+      font-size: 42px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      z-index: 2;
+      letter-spacing: -0.5px;
+    }
+
+    .headline-gradient {
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #818CF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .headline-white {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .subheading {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      margin-bottom: 40px;
+      z-index: 2;
+      max-width: 500px;
+    }
+
+    /* ═══════════════════════════════════════
+       MacBook Frame
+       ═══════════════════════════════════════ */
+    .macbook-frame {
+      width: 680px;
+      z-index: 2;
+    }
+
+    .macbook-screen {
+      width: 680px;
+      height: 440px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      border-radius: 12px 12px 0 0;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #333;
+      border-bottom: none;
+    }
+
+    .macbook-base {
+      width: 780px;
+      height: 14px;
+      background: linear-gradient(180deg, #555 0%, #333 100%);
+      border-radius: 0 0 6px 6px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .macbook-base::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: #444;
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* ═══════════════════════════════════════
+       Menu Bar
+       ═══════════════════════════════════════ */
+    .menu-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 28px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px; z-index: 5;
+    }
+
+    .menu-left { display: flex; align-items: center; gap: 14px; }
+    .menu-item { font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500; }
+    .menu-right { display: flex; align-items: center; gap: 10px; }
+    .menu-icon { font-size: 11px; color: rgba(255,255,255,0.7); }
+
+    /* ═══════════════════════════════════════
+       Notch
+       ═══════════════════════════════════════ */
+    .notch {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 140px; height: 28px;
+      background: #000;
+      border-radius: 0 0 14px 14px;
+      z-index: 10;
+    }
+
+    .notch-camera {
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      border: 1.5px solid #333;
+    }
+
+    .notch-expanded {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 10, 12, 0.97);
+      border-radius: 0 0 20px 20px;
+      z-index: 20;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-top: none;
+      box-shadow:
+        0 12px 40px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0,0,0,0.3),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .notch-expanded .camera {
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      border: 1.5px solid #333;
+      z-index: 2;
+    }
+
+    .notch-expanded .notch-content {
+      padding: 32px 16px 16px 16px;
+    }
+
+    /* ═══════════════════════════════════════
+       Notch UI Components
+       ═══════════════════════════════════════ */
+    .notch-input-area { margin-bottom: 10px; }
+
+    .notch-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fafafa;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .notch-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .input-hints {
+      display: flex; justify-content: space-between;
+      margin-top: 6px; padding: 0 2px;
+    }
+
+    .hint {
+      font-size: 10px; color: rgba(255,255,255,0.25);
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    .hint kbd {
+      background: rgba(255,255,255,0.08);
+      padding: 1px 5px; border-radius: 3px;
+      font-size: 9px; font-family: 'Inter', sans-serif;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .notch-tabs {
+      display: flex; gap: 2px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px; padding: 2px;
+    }
+
+    .notch-tab {
+      flex: 1; text-align: center;
+      font-size: 11px; font-weight: 500;
+      padding: 5px 8px; border-radius: 6px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .notch-tab.active {
+      background: rgba(255,255,255,0.1);
+      color: #fafafa;
+    }
+
+    .notch-tab .tab-count {
+      font-size: 9px; color: rgba(255,255,255,0.25);
+      margin-left: 3px;
+    }
+
+    .notch-tab.active .tab-count { color: rgba(255,255,255,0.5); }
+
+    .notch-list { display: flex; flex-direction: column; gap: 4px; }
+
+    .notch-list-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      font-size: 12px; color: rgba(255,255,255,0.8);
+    }
+
+    .todo-check {
+      width: 14px; height: 14px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    .todo-check.done {
+      background: #3B82F6; border-color: #3B82F6;
+      position: relative;
+    }
+
+    .todo-check.done::after {
+      content: ''; position: absolute;
+      top: 2px; left: 4px;
+      width: 4px; height: 7px;
+      border: solid white;
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg);
+    }
+
+    .todo-text.done { text-decoration: line-through; color: rgba(255,255,255,0.3); }
+    .note-icon { font-size: 11px; opacity: 0.4; }
+    .note-time { margin-left: auto; font-size: 10px; color: rgba(255,255,255,0.2); }
+
+    .file-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+    .file-item {
+      aspect-ratio: 1;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px; padding: 6px;
+    }
+
+    .file-icon { font-size: 20px; }
+    .file-name {
+      font-size: 8px; color: rgba(255,255,255,0.5);
+      text-align: center; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap; width: 100%;
+    }
+
+    /* ═══════════════════════════════════════
+       Drag State
+       ═══════════════════════════════════════ */
+    .notch-drag {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 10, 12, 0.97);
+      border-radius: 0 0 20px 20px;
+      z-index: 20;
+      border: 2px dashed rgba(96, 165, 250, 0.35);
+      border-top: none;
+      box-shadow:
+        0 8px 30px rgba(59, 130, 246, 0.2),
+        0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .notch-drag .camera {
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      border: 1.5px solid #333;
+      z-index: 2;
+    }
+
+    .notch-drag .drag-content {
+      padding-top: 36px;
+      padding-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .drag-icon { font-size: 28px; }
+    .drag-text { font-size: 12px; font-weight: 500; color: rgba(96, 165, 250, 0.8); }
+    .drag-subtext { font-size: 10px; color: rgba(255,255,255,0.25); }
+
+    .cursor-indicator {
+      position: absolute; width: 14px; height: 14px; z-index: 30;
+    }
+    .cursor-indicator svg {
+      width: 14px; height: 14px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .drag-file-indicator { position: absolute; z-index: 25; }
+    .drag-file-ghost {
+      width: 44px; height: 52px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transform: rotate(-5deg);
+    }
+
+    /* ═══════════════════════════════════════
+       Desktop elements
+       ═══════════════════════════════════════ */
+    .fake-window {
+      position: absolute;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .fake-window-bar {
+      height: 28px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px 8px 0 0;
+      display: flex; align-items: center; padding: 0 10px; gap: 6px;
+    }
+
+    .fake-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .fake-dot.red { background: #FF5F57; }
+    .fake-dot.yellow { background: #FEBC2E; }
+    .fake-dot.green { background: #28C840; }
+
+    .fake-window-content { padding: 16px; }
+    .fake-line { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-bottom: 8px; }
+    .fake-line:nth-child(1) { width: 80%; }
+    .fake-line:nth-child(2) { width: 60%; }
+    .fake-line:nth-child(3) { width: 70%; }
+    .fake-line:nth-child(4) { width: 45%; }
+
+    .desktop-icons {
+      position: absolute;
+      top: 50px; right: 20px;
+      display: flex; flex-direction: column; gap: 16px; opacity: 0.3;
+    }
+
+    .desktop-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+    }
+
+    /* ═══════════════════════════════════════
+       Settings Window (New sidebar layout)
+       ═══════════════════════════════════════ */
+    .settings-window {
+      width: 560px;
+      height: 360px;
+      background: rgba(18, 18, 20, 0.98);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      box-shadow: 0 25px 60px -12px rgba(0,0,0,0.5);
+      display: flex;
+    }
+
+    .settings-sidebar {
+      width: 160px;
+      background: rgba(13, 13, 15, 0.98);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .settings-app-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px;
+      margin-bottom: 12px;
+    }
+
+    .settings-app-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .settings-app-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      cursor: pointer;
+    }
+
+    .settings-nav-item.active {
+      background: rgba(59, 130, 246, 0.15);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .settings-nav-icon {
+      font-size: 12px;
+      width: 16px;
+      text-align: center;
+    }
+
+    .settings-main {
+      flex: 1;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .settings-main-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+
+    .settings-section { margin-bottom: 16px; }
+
+    .settings-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 8px;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .settings-row + .settings-row {
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .settings-label { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+    .settings-value {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .settings-toggle {
+      width: 36px; height: 20px;
+      background: #3B82F6; border-radius: 10px; position: relative;
+    }
+
+    .settings-toggle::after {
+      content: ''; position: absolute;
+      top: 2px; right: 2px;
+      width: 16px; height: 16px;
+      background: white; border-radius: 50%;
+    }
+
+    .settings-path {
+      font-size: 10px; color: rgba(255,255,255,0.3);
+      font-family: 'SF Mono', monospace;
+      background: rgba(255,255,255,0.04);
+      padding: 3px 8px; border-radius: 4px;
+    }
+
+    .settings-btn {
+      font-size: 11px; padding: 4px 10px; border-radius: 6px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Usage bars */
+    .usage-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+    }
+
+    .usage-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      width: 50px;
+    }
+
+    .usage-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .usage-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3B82F6, #6366F1);
+      border-radius: 3px;
+    }
+
+    .usage-count {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      width: 40px;
+      text-align: right;
+    }
+
+    .upgrade-btn {
+      font-size: 11px; font-weight: 600;
+      padding: 6px 16px; border-radius: 8px;
+      background: linear-gradient(135deg, #3B82F6, #6366F1);
+      color: white; border: none;
+    }
+
+    .plan-badge-free {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Coming Soon style */
+    .coming-soon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 40px 20px;
+    }
+
+    .coming-soon-icon {
+      font-size: 28px;
+      opacity: 0.15;
+    }
+
+    .coming-soon-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .coming-soon-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Feature badge */
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(96, 165, 250, 0.1);
+      color: rgba(96, 165, 250, 0.8);
+      border: 1px solid rgba(96, 165, 250, 0.15);
+      margin-bottom: 16px;
+      z-index: 2;
+    }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════════════════════════════════
+       SCREENSHOT 1: Todos — Hero
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">01 — Todos</div>
+  <div class="screenshot bg-1" id="shot-01">
+    <div class="feature-badge">&#9889; Productivity in your notch</div>
+    <div class="headline headline-white">Your notch,<br>now productive.</div>
+    <div class="subheading">Quick-capture todos right from the MacBook notch. Always one hover away.</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Finder</span>
+            <span class="menu-item">File</span>
+            <span class="menu-item">Edit</span>
+            <span class="menu-item">View</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">&#9679;</span>
+            <span class="menu-icon">9:41</span>
+          </div>
+        </div>
+
+        <div class="notch-expanded" style="width: 340px; height: 310px;">
+          <div class="camera"></div>
+          <div class="notch-content">
+            <div class="notch-input-area">
+              <input type="text" class="notch-input" placeholder="Quick capture..." disabled>
+              <div class="input-hints">
+                <span class="hint"><kbd>Enter</kbd> Todo</span>
+                <span class="hint"><kbd>&#8984;Enter</kbd> Note</span>
+              </div>
+            </div>
+
+            <div class="notch-tabs">
+              <div class="notch-tab active">Todos <span class="tab-count">4</span></div>
+              <div class="notch-tab">Notes <span class="tab-count">2</span></div>
+              <div class="notch-tab">Files <span class="tab-count">3</span></div>
+            </div>
+
+            <div class="notch-list">
+              <div class="notch-list-item">
+                <div class="todo-check"></div>
+                <span>Review Q1 budget proposal</span>
+              </div>
+              <div class="notch-list-item">
+                <div class="todo-check"></div>
+                <span>Reply to Sarah's email</span>
+              </div>
+              <div class="notch-list-item">
+                <div class="todo-check done"></div>
+                <span class="todo-text done">Update project timeline</span>
+              </div>
+              <div class="notch-list-item">
+                <div class="todo-check"></div>
+                <span>Book flight for March conf</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cursor-indicator" style="top: 20px; left: 380px;">
+          <svg viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1"><path d="M5 3l14 8-6.5 2L9 19.5z"/></svg>
+        </div>
+
+        <div class="fake-window" style="top: 80px; left: 20px; width: 260px; height: 280px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+          <div class="fake-window-content">
+            <div class="fake-line"></div><div class="fake-line"></div>
+            <div class="fake-line"></div><div class="fake-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREENSHOT 2: Notes
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">02 — Notes</div>
+  <div class="screenshot bg-2" id="shot-02">
+    <div class="feature-badge">&#128221; Quick notes</div>
+    <div class="headline headline-white">Capture every idea.<br>Instantly.</div>
+    <div class="subheading">Jot down meeting notes while on a video call. Your eyes stay near the camera.</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Zoom</span>
+            <span class="menu-item">Meeting</span>
+            <span class="menu-item">View</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">14:23</span>
+          </div>
+        </div>
+
+        <div class="notch-expanded" style="width: 340px; height: 280px;">
+          <div class="camera"></div>
+          <div class="notch-content">
+            <div class="notch-input-area">
+              <input type="text" class="notch-input" value="Client wants to push deadline to April" disabled style="border-color: rgba(96,165,250,0.5); background: rgba(255,255,255,0.08);">
+              <div class="input-hints">
+                <span class="hint"><kbd>Enter</kbd> Todo</span>
+                <span class="hint"><kbd>&#8984;Enter</kbd> Note</span>
+              </div>
+            </div>
+
+            <div class="notch-tabs">
+              <div class="notch-tab">Todos <span class="tab-count">4</span></div>
+              <div class="notch-tab active">Notes <span class="tab-count">3</span></div>
+              <div class="notch-tab">Files <span class="tab-count">3</span></div>
+            </div>
+
+            <div class="notch-list">
+              <div class="notch-list-item">
+                <span class="note-icon">&#128221;</span>
+                <span>Budget approved, $50k for Q2 marketing</span>
+                <span class="note-time">2m</span>
+              </div>
+              <div class="notch-list-item">
+                <span class="note-icon">&#128221;</span>
+                <span>New hire March 15, needs onboarding doc</span>
+                <span class="note-time">5m</span>
+              </div>
+              <div class="notch-list-item">
+                <span class="note-icon">&#128221;</span>
+                <span>Team offsite Q2 — check venues</span>
+                <span class="note-time">12m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fake-window" style="top: 80px; left: 20px; width: 260px; height: 280px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREENSHOT 3: Files
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">03 — Files</div>
+  <div class="screenshot bg-3" id="shot-03">
+    <div class="feature-badge">&#128194; File shelf</div>
+    <div class="headline headline-white">Drop. Access. Done.</div>
+    <div class="subheading">Drag files to the notch for quick access. Your temporary file shelf, always at hand.</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Finder</span>
+            <span class="menu-item">File</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">15:07</span>
+          </div>
+        </div>
+
+        <div class="notch-expanded" style="width: 340px; height: 280px;">
+          <div class="camera"></div>
+          <div class="notch-content">
+            <div class="notch-input-area">
+              <input type="text" class="notch-input" placeholder="Quick capture..." disabled>
+              <div class="input-hints">
+                <span class="hint"><kbd>Enter</kbd> Todo</span>
+                <span class="hint"><kbd>&#8984;Enter</kbd> Note</span>
+              </div>
+            </div>
+
+            <div class="notch-tabs">
+              <div class="notch-tab">Todos <span class="tab-count">4</span></div>
+              <div class="notch-tab">Notes <span class="tab-count">3</span></div>
+              <div class="notch-tab active">Files <span class="tab-count">3</span></div>
+            </div>
+
+            <div class="file-grid">
+              <div class="file-item">
+                <span class="file-icon">&#128196;</span>
+                <span class="file-name">Q1_Report.pdf</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">&#127912;</span>
+                <span class="file-name">mockup.png</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">&#128202;</span>
+                <span class="file-name">data.xlsx</span>
+              </div>
+              <div class="file-item" style="border-style: dashed; border-color: rgba(255,255,255,0.1);">
+                <span style="font-size: 16px; color: rgba(255,255,255,0.15);">+</span>
+                <span class="file-name" style="color: rgba(255,255,255,0.2);">Drop file</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fake-window" style="top: 80px; left: 20px; width: 260px; height: 280px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+          <div class="fake-window-content">
+            <div class="fake-line"></div><div class="fake-line"></div>
+            <div class="fake-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREENSHOT 4: Settings (New sidebar layout)
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">04 — Settings</div>
+  <div class="screenshot bg-4" id="shot-04">
+    <div class="feature-badge">&#9881; Customize your experience</div>
+    <div class="headline headline-white">Simple. Powerful.<br>Settings.</div>
+    <div class="subheading">Everything you need, nothing you don't. Free tier included with generous limits.</div>
+
+    <div class="settings-window" style="z-index: 2;">
+      <!-- Sidebar -->
+      <div class="settings-sidebar">
+        <div class="settings-app-header">
+          <div class="settings-app-icon">&#9776;</div>
+          <div class="settings-app-name">NotchDrop</div>
+        </div>
+        <div class="settings-nav-item">
+          <span class="settings-nav-icon">&#9881;</span>
+          <span>General</span>
+        </div>
+        <div class="settings-nav-item">
+          <span class="settings-nav-icon">&#10024;</span>
+          <span>AI</span>
+        </div>
+        <div class="settings-nav-item active">
+          <span class="settings-nav-icon">&#128100;</span>
+          <span>Account</span>
+        </div>
+        <div class="settings-nav-item">
+          <span class="settings-nav-icon">&#8505;</span>
+          <span>About</span>
+        </div>
+      </div>
+      <!-- Main content — Account pane -->
+      <div class="settings-main">
+        <div class="settings-main-title">Account</div>
+        <div class="settings-section">
+          <div class="settings-section-title">Current Plan</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <span class="plan-badge-free">FREE</span>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Generous free tier</span>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title">Usage</div>
+          <div class="usage-row">
+            <span class="usage-label">Todos</span>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width: 40%;"></div></div>
+            <span class="usage-count">4 / 10</span>
+          </div>
+          <div class="usage-row">
+            <span class="usage-label">Notes</span>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width: 30%;"></div></div>
+            <span class="usage-count">3 / 10</span>
+          </div>
+          <div class="usage-row">
+            <span class="usage-label">Files</span>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width: 20%;"></div></div>
+            <span class="usage-count">3 / 15</span>
+          </div>
+        </div>
+        <div style="margin-top: 16px;">
+          <button class="upgrade-btn">&#11088; Upgrade to Pro — $4.99</button>
+          <div style="font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 6px;">Unlimited todos, notes & files. One-time purchase.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREENSHOT 5: Hover / Drag to Save
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">05 — Hover to Expand</div>
+  <div class="screenshot bg-5" id="shot-05">
+    <div class="feature-badge">&#128171; Zero footprint</div>
+    <div class="headline headline-white">Lives in your notch.<br>Just hover to expand.</div>
+    <div class="subheading">No dock icon. No windows. Just hover over the notch and it opens. Drag files to save them instantly.</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Finder</span>
+            <span class="menu-item">File</span>
+            <span class="menu-item">Edit</span>
+            <span class="menu-item">View</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">16:30</span>
+          </div>
+        </div>
+
+        <div class="notch-drag" style="width: 220px; height: 130px;">
+          <div class="camera"></div>
+          <div class="drag-content">
+            <span class="drag-icon">&#128229;</span>
+            <span class="drag-text">Drop to save</span>
+            <span class="drag-subtext">3 of 15 slots used</span>
+          </div>
+        </div>
+
+        <div class="drag-file-indicator" style="top: 200px; left: 250px;">
+          <div class="drag-file-ghost">&#128196;</div>
+        </div>
+
+        <div class="cursor-indicator" style="top: 198px; left: 240px;">
+          <svg viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1"><path d="M5 3l14 8-6.5 2L9 19.5z"/></svg>
+        </div>
+
+        <div class="fake-window" style="top: 60px; left: 20px; width: 280px; height: 300px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+          <div class="fake-window-content">
+            <div class="fake-line"></div><div class="fake-line"></div>
+            <div class="fake-line"></div><div class="fake-line"></div>
+          </div>
+        </div>
+
+        <div class="desktop-icons">
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

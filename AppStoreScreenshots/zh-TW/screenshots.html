@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>NotchDrop — App Store 截圖 (繁體中文)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans TC', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: #111;
+      color: #fafafa;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 40px;
+      align-items: center;
+    }
+
+    /* Each screenshot is 1280x800 for Mac App Store */
+    .screenshot {
+      width: 1280px;
+      height: 800px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screenshot-label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════
+       Gradient Backgrounds
+       ═══════════════════════════════════════ */
+    .bg-1 {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    }
+    .bg-2 {
+      background: linear-gradient(135deg, #141e30 0%, #243b55 50%, #141e30 100%);
+    }
+    .bg-3 {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    .bg-4 {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #1f2937 100%);
+    }
+    .bg-5 {
+      background: linear-gradient(135deg, #1b1b2f 0%, #162447 50%, #1f4068 100%);
+    }
+
+    /* Subtle mesh overlay for depth */
+    .screenshot::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(96, 165, 250, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════
+       Headline + Subheading
+       ═══════════════════════════════════════ */
+    .headline {
+      font-size: 40px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      z-index: 2;
+      letter-spacing: 1px;
+    }
+
+    .headline-white {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .subheading {
+      font-size: 17px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      margin-bottom: 40px;
+      z-index: 2;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════
+       MacBook Frame
+       ═══════════════════════════════════════ */
+    .macbook-frame {
+      width: 680px;
+      z-index: 2;
+    }
+
+    .macbook-screen {
+      width: 680px;
+      height: 440px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      border-radius: 12px 12px 0 0;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #333;
+      border-bottom: none;
+    }
+
+    .macbook-base {
+      width: 780px;
+      height: 14px;
+      background: linear-gradient(180deg, #555 0%, #333 100%);
+      border-radius: 0 0 6px 6px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .macbook-base::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: #444;
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* ═══════════════════════════════════════
+       Menu Bar
+       ═══════════════════════════════════════ */
+    .menu-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 28px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px; z-index: 5;
+    }
+
+    .menu-left { display: flex; align-items: center; gap: 14px; }
+    .menu-item { font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500; }
+    .menu-right { display: flex; align-items: center; gap: 10px; }
+    .menu-icon { font-size: 11px; color: rgba(255,255,255,0.7); }
+
+    /* ═══════════════════════════════════════
+       Notch
+       ═══════════════════════════════════════ */
+    .notch-expanded {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 10, 12, 0.97);
+      border-radius: 0 0 20px 20px;
+      z-index: 20;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-top: none;
+      box-shadow:
+        0 12px 40px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0,0,0,0.3),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .notch-expanded .camera {
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      border: 1.5px solid #333;
+      z-index: 2;
+    }
+
+    .notch-expanded .notch-content {
+      padding: 32px 16px 16px 16px;
+    }
+
+    /* ═══════════════════════════════════════
+       Notch UI
+       ═══════════════════════════════════════ */
+    .notch-input-area { margin-bottom: 10px; }
+
+    .notch-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fafafa;
+      font-size: 13px;
+      font-family: 'Noto Sans TC', 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .notch-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .input-hints {
+      display: flex; justify-content: space-between;
+      margin-top: 6px; padding: 0 2px;
+    }
+
+    .hint {
+      font-size: 10px; color: rgba(255,255,255,0.25);
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    .hint kbd {
+      background: rgba(255,255,255,0.08);
+      padding: 1px 5px; border-radius: 3px;
+      font-size: 9px; font-family: 'Inter', sans-serif;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .notch-tabs {
+      display: flex; gap: 2px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px; padding: 2px;
+    }
+
+    .notch-tab {
+      flex: 1; text-align: center;
+      font-size: 11px; font-weight: 500;
+      padding: 5px 8px; border-radius: 6px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .notch-tab.active {
+      background: rgba(255,255,255,0.1);
+      color: #fafafa;
+    }
+
+    .notch-tab .tab-count {
+      font-size: 9px; color: rgba(255,255,255,0.25);
+      margin-left: 3px;
+    }
+
+    .notch-tab.active .tab-count { color: rgba(255,255,255,0.5); }
+
+    .notch-list { display: flex; flex-direction: column; gap: 4px; }
+
+    .notch-list-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      font-size: 12px; color: rgba(255,255,255,0.8);
+    }
+
+    .todo-check {
+      width: 14px; height: 14px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    .todo-check.done {
+      background: #3B82F6; border-color: #3B82F6;
+      position: relative;
+    }
+
+    .todo-check.done::after {
+      content: ''; position: absolute;
+      top: 2px; left: 4px;
+      width: 4px; height: 7px;
+      border: solid white;
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg);
+    }
+
+    .todo-text.done { text-decoration: line-through; color: rgba(255,255,255,0.3); }
+    .note-icon { font-size: 11px; opacity: 0.4; }
+    .note-time { margin-left: auto; font-size: 10px; color: rgba(255,255,255,0.2); }
+
+    .file-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+    .file-item {
+      aspect-ratio: 1;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px; padding: 6px;
+    }
+
+    .file-icon { font-size: 20px; }
+    .file-name {
+      font-size: 8px; color: rgba(255,255,255,0.5);
+      text-align: center; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap; width: 100%;
+    }
+
+    /* Drag State */
+    .notch-drag {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 10, 12, 0.97);
+      border-radius: 0 0 20px 20px;
+      z-index: 20;
+      border: 2px dashed rgba(96, 165, 250, 0.35);
+      border-top: none;
+      box-shadow:
+        0 8px 30px rgba(59, 130, 246, 0.2),
+        0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .notch-drag .camera {
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      border: 1.5px solid #333;
+      z-index: 2;
+    }
+
+    .notch-drag .drag-content {
+      padding-top: 36px;
+      padding-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .drag-icon { font-size: 28px; }
+    .drag-text { font-size: 12px; font-weight: 500; color: rgba(96, 165, 250, 0.8); }
+    .drag-subtext { font-size: 10px; color: rgba(255,255,255,0.25); }
+
+    .cursor-indicator {
+      position: absolute; width: 14px; height: 14px; z-index: 30;
+    }
+    .cursor-indicator svg {
+      width: 14px; height: 14px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .drag-file-indicator { position: absolute; z-index: 25; }
+    .drag-file-ghost {
+      width: 44px; height: 52px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transform: rotate(-5deg);
+    }
+
+    /* Desktop */
+    .fake-window {
+      position: absolute;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .fake-window-bar {
+      height: 28px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px 8px 0 0;
+      display: flex; align-items: center; padding: 0 10px; gap: 6px;
+    }
+
+    .fake-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .fake-dot.red { background: #FF5F57; }
+    .fake-dot.yellow { background: #FEBC2E; }
+    .fake-dot.green { background: #28C840; }
+
+    .fake-window-content { padding: 16px; }
+    .fake-line { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-bottom: 8px; }
+    .fake-line:nth-child(1) { width: 80%; }
+    .fake-line:nth-child(2) { width: 60%; }
+    .fake-line:nth-child(3) { width: 70%; }
+    .fake-line:nth-child(4) { width: 45%; }
+
+    .desktop-icons {
+      position: absolute;
+      top: 50px; right: 20px;
+      display: flex; flex-direction: column; gap: 16px; opacity: 0.3;
+    }
+
+    .desktop-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+    }
+
+    /* ═══════════════════════════════════════
+       Settings Window
+       ═══════════════════════════════════════ */
+    .settings-window {
+      width: 560px;
+      height: 360px;
+      background: rgba(18, 18, 20, 0.98);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      box-shadow: 0 25px 60px -12px rgba(0,0,0,0.5);
+      display: flex;
+    }
+
+    .settings-sidebar {
+      width: 160px;
+      background: rgba(13, 13, 15, 0.98);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .settings-app-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px;
+      margin-bottom: 12px;
+    }
+
+    .settings-app-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .settings-app-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .settings-nav-item.active {
+      background: rgba(59, 130, 246, 0.15);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .settings-nav-icon {
+      font-size: 12px;
+      width: 16px;
+      text-align: center;
+    }
+
+    .settings-main {
+      flex: 1;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .settings-main-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 20px;
+    }
+
+    .settings-section { margin-bottom: 16px; }
+
+    .settings-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 8px;
+    }
+
+    .usage-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+    }
+
+    .usage-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      width: 60px;
+    }
+
+    .usage-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .usage-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3B82F6, #6366F1);
+      border-radius: 3px;
+    }
+
+    .usage-count {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      width: 40px;
+      text-align: right;
+    }
+
+    .upgrade-btn {
+      font-size: 11px; font-weight: 600;
+      padding: 6px 16px; border-radius: 8px;
+      background: linear-gradient(135deg, #3B82F6, #6366F1);
+      color: white; border: none;
+    }
+
+    .plan-badge-free {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Feature badge */
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(96, 165, 250, 0.1);
+      color: rgba(96, 165, 250, 0.8);
+      border: 1px solid rgba(96, 165, 250, 0.15);
+      margin-bottom: 16px;
+      z-index: 2;
+    }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════════════════════════════════
+       截圖 1: 待辦事項
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">01 — 待辦事項</div>
+  <div class="screenshot bg-1" id="shot-01">
+    <div class="feature-badge">&#9889; 瀏海裡的生產力工具</div>
+    <div class="headline headline-white">你的瀏海，<br>現在超有生產力。</div>
+    <div class="subheading">在 MacBook 瀏海中快速捕捉待辦事項。滑鼠一靠近就展開。</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Finder</span>
+            <span class="menu-item">檔案</span>
+            <span class="menu-item">編輯</span>
+            <span class="menu-item">顯示方式</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">&#9679;</span>
+            <span class="menu-icon">9:41</span>
+          </div>
+        </div>
+
+        <div class="notch-expanded" style="width: 340px; height: 310px;">
+          <div class="camera"></div>
+          <div class="notch-content">
+            <div class="notch-input-area">
+              <input type="text" class="notch-input" placeholder="快速捕捉..." disabled>
+              <div class="input-hints">
+                <span class="hint"><kbd>Enter</kbd> 待辦</span>
+                <span class="hint"><kbd>&#8984;Enter</kbd> 筆記</span>
+              </div>
+            </div>
+
+            <div class="notch-tabs">
+              <div class="notch-tab active">待辦 <span class="tab-count">4</span></div>
+              <div class="notch-tab">筆記 <span class="tab-count">2</span></div>
+              <div class="notch-tab">檔案 <span class="tab-count">3</span></div>
+            </div>
+
+            <div class="notch-list">
+              <div class="notch-list-item">
+                <div class="todo-check"></div>
+                <span>審核 Q1 預算提案</span>
+              </div>
+              <div class="notch-list-item">
+                <div class="todo-check"></div>
+                <span>回覆 Sarah 的信件</span>
+              </div>
+              <div class="notch-list-item">
+                <div class="todo-check done"></div>
+                <span class="todo-text done">更新專案時間表</span>
+              </div>
+              <div class="notch-list-item">
+                <div class="todo-check"></div>
+                <span>預訂三月研討會機票</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cursor-indicator" style="top: 20px; left: 380px;">
+          <svg viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1"><path d="M5 3l14 8-6.5 2L9 19.5z"/></svg>
+        </div>
+
+        <div class="fake-window" style="top: 80px; left: 20px; width: 260px; height: 280px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+          <div class="fake-window-content">
+            <div class="fake-line"></div><div class="fake-line"></div>
+            <div class="fake-line"></div><div class="fake-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       截圖 2: 筆記
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">02 — 筆記</div>
+  <div class="screenshot bg-2" id="shot-02">
+    <div class="feature-badge">&#128221; 快速筆記</div>
+    <div class="headline headline-white">每個靈感，<br>即刻記錄。</div>
+    <div class="subheading">視訊會議中隨手記下筆記。你的視線始終靠近鏡頭。</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Zoom</span>
+            <span class="menu-item">會議</span>
+            <span class="menu-item">顯示方式</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">14:23</span>
+          </div>
+        </div>
+
+        <div class="notch-expanded" style="width: 340px; height: 280px;">
+          <div class="camera"></div>
+          <div class="notch-content">
+            <div class="notch-input-area">
+              <input type="text" class="notch-input" value="客戶希望把截止日推遲到四月" disabled style="border-color: rgba(96,165,250,0.5); background: rgba(255,255,255,0.08);">
+              <div class="input-hints">
+                <span class="hint"><kbd>Enter</kbd> 待辦</span>
+                <span class="hint"><kbd>&#8984;Enter</kbd> 筆記</span>
+              </div>
+            </div>
+
+            <div class="notch-tabs">
+              <div class="notch-tab">待辦 <span class="tab-count">4</span></div>
+              <div class="notch-tab active">筆記 <span class="tab-count">3</span></div>
+              <div class="notch-tab">檔案 <span class="tab-count">3</span></div>
+            </div>
+
+            <div class="notch-list">
+              <div class="notch-list-item">
+                <span class="note-icon">&#128221;</span>
+                <span>Q2 行銷預算核准，$50k</span>
+                <span class="note-time">2分鐘</span>
+              </div>
+              <div class="notch-list-item">
+                <span class="note-icon">&#128221;</span>
+                <span>3/15 新人到職，需準備入職文件</span>
+                <span class="note-time">5分鐘</span>
+              </div>
+              <div class="notch-list-item">
+                <span class="note-icon">&#128221;</span>
+                <span>Q2 團建 — 查場地</span>
+                <span class="note-time">12分鐘</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fake-window" style="top: 80px; left: 20px; width: 260px; height: 280px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       截圖 3: 檔案
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">03 — 檔案</div>
+  <div class="screenshot bg-3" id="shot-03">
+    <div class="feature-badge">&#128194; 檔案暫存架</div>
+    <div class="headline headline-white">拖放。取用。完成。</div>
+    <div class="subheading">把檔案拖到瀏海即可快速存取。你的隨身檔案暫存架。</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Finder</span>
+            <span class="menu-item">檔案</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">15:07</span>
+          </div>
+        </div>
+
+        <div class="notch-expanded" style="width: 340px; height: 280px;">
+          <div class="camera"></div>
+          <div class="notch-content">
+            <div class="notch-input-area">
+              <input type="text" class="notch-input" placeholder="快速捕捉..." disabled>
+              <div class="input-hints">
+                <span class="hint"><kbd>Enter</kbd> 待辦</span>
+                <span class="hint"><kbd>&#8984;Enter</kbd> 筆記</span>
+              </div>
+            </div>
+
+            <div class="notch-tabs">
+              <div class="notch-tab">待辦 <span class="tab-count">4</span></div>
+              <div class="notch-tab">筆記 <span class="tab-count">3</span></div>
+              <div class="notch-tab active">檔案 <span class="tab-count">3</span></div>
+            </div>
+
+            <div class="file-grid">
+              <div class="file-item">
+                <span class="file-icon">&#128196;</span>
+                <span class="file-name">Q1報告.pdf</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">&#127912;</span>
+                <span class="file-name">設計稿.png</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">&#128202;</span>
+                <span class="file-name">數據.xlsx</span>
+              </div>
+              <div class="file-item" style="border-style: dashed; border-color: rgba(255,255,255,0.1);">
+                <span style="font-size: 16px; color: rgba(255,255,255,0.15);">+</span>
+                <span class="file-name" style="color: rgba(255,255,255,0.2);">拖放檔案</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fake-window" style="top: 80px; left: 20px; width: 260px; height: 280px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+          <div class="fake-window-content">
+            <div class="fake-line"></div><div class="fake-line"></div>
+            <div class="fake-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       截圖 4: 設定（新側邊欄版面）
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">04 — 設定</div>
+  <div class="screenshot bg-4" id="shot-04">
+    <div class="feature-badge">&#9881; 自訂你的體驗</div>
+    <div class="headline headline-white">簡潔。強大。<br>個人化設定。</div>
+    <div class="subheading">你需要的功能都在，不需要的通通沒有。慷慨的免費方案。</div>
+
+    <div class="settings-window" style="z-index: 2;">
+      <!-- 側邊欄 -->
+      <div class="settings-sidebar">
+        <div class="settings-app-header">
+          <div class="settings-app-icon">&#9776;</div>
+          <div class="settings-app-name">NotchDrop</div>
+        </div>
+        <div class="settings-nav-item">
+          <span class="settings-nav-icon">&#9881;</span>
+          <span>一般</span>
+        </div>
+        <div class="settings-nav-item">
+          <span class="settings-nav-icon">&#10024;</span>
+          <span>AI</span>
+        </div>
+        <div class="settings-nav-item active">
+          <span class="settings-nav-icon">&#128100;</span>
+          <span>帳號</span>
+        </div>
+        <div class="settings-nav-item">
+          <span class="settings-nav-icon">&#8505;</span>
+          <span>關於</span>
+        </div>
+      </div>
+      <!-- 主內容 — 帳號 -->
+      <div class="settings-main">
+        <div class="settings-main-title">帳號</div>
+        <div class="settings-section">
+          <div class="settings-section-title">目前方案</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <span class="plan-badge-free">免費版</span>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4);">慷慨的免費方案</span>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title">使用量</div>
+          <div class="usage-row">
+            <span class="usage-label">待辦事項</span>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width: 40%;"></div></div>
+            <span class="usage-count">4 / 10</span>
+          </div>
+          <div class="usage-row">
+            <span class="usage-label">筆記</span>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width: 30%;"></div></div>
+            <span class="usage-count">3 / 10</span>
+          </div>
+          <div class="usage-row">
+            <span class="usage-label">檔案</span>
+            <div class="usage-bar-bg"><div class="usage-bar-fill" style="width: 20%;"></div></div>
+            <span class="usage-count">3 / 15</span>
+          </div>
+        </div>
+        <div style="margin-top: 16px;">
+          <button class="upgrade-btn">&#11088; 升級 Pro — $4.99</button>
+          <div style="font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 6px;">無限待辦、筆記和檔案。一次性購買。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       截圖 5: 滑入展開 / 拖放儲存
+       ═══════════════════════════════════════ -->
+  <div class="screenshot-label">05 — 滑入展開</div>
+  <div class="screenshot bg-5" id="shot-05">
+    <div class="feature-badge">&#128171; 零佔用空間</div>
+    <div class="headline headline-white">住在你的瀏海裡。<br>滑過去就展開。</div>
+    <div class="subheading">沒有 Dock 圖示，沒有視窗。只要滑過瀏海就打開。拖放檔案立即儲存。</div>
+
+    <div class="macbook-frame">
+      <div class="macbook-screen">
+        <div class="menu-bar">
+          <div class="menu-left">
+            <span class="menu-item">&#63743;</span>
+            <span class="menu-item">Finder</span>
+            <span class="menu-item">檔案</span>
+            <span class="menu-item">編輯</span>
+            <span class="menu-item">顯示方式</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-icon">16:30</span>
+          </div>
+        </div>
+
+        <div class="notch-drag" style="width: 220px; height: 130px;">
+          <div class="camera"></div>
+          <div class="drag-content">
+            <span class="drag-icon">&#128229;</span>
+            <span class="drag-text">放下即儲存</span>
+            <span class="drag-subtext">已使用 3 / 15 個位置</span>
+          </div>
+        </div>
+
+        <div class="drag-file-indicator" style="top: 200px; left: 250px;">
+          <div class="drag-file-ghost">&#128196;</div>
+        </div>
+
+        <div class="cursor-indicator" style="top: 198px; left: 240px;">
+          <svg viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1"><path d="M5 3l14 8-6.5 2L9 19.5z"/></svg>
+        </div>
+
+        <div class="fake-window" style="top: 60px; left: 20px; width: 280px; height: 300px; opacity: 0.3;">
+          <div class="fake-window-bar">
+            <div class="fake-dot red"></div><div class="fake-dot yellow"></div><div class="fake-dot green"></div>
+          </div>
+          <div class="fake-window-content">
+            <div class="fake-line"></div><div class="fake-line"></div>
+            <div class="fake-line"></div><div class="fake-line"></div>
+          </div>
+        </div>
+
+        <div class="desktop-icons">
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+        </div>
+      </div>
+      <div class="macbook-base"></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
