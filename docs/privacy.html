@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotchDrop — Privacy Policy</title>
+  <meta name="description" content="NotchDrop Privacy Policy — we collect nothing. All data stays on your device.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --border: rgba(255,255,255,0.07);
+      --text: #fafafa;
+      --muted: rgba(255,255,255,0.45);
+      --accent: #3B82F6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    body.zh {
+      font-family: 'Noto Sans TC', 'Inter', -apple-system, sans-serif;
+    }
+
+    /* Lang bar */
+    .lang-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: rgba(10,10,10,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-bar-left a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .lang-bar-left a:hover { color: var(--text); }
+
+    .lang-btns { display: flex; gap: 4px; }
+
+    .lang-btn {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    /* Content */
+    .content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px 24px 80px;
+    }
+
+    .page-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(96,165,250,0.7);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .last-updated {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* TL;DR box */
+    .tldr {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 48px;
+    }
+
+    .tldr-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(96,165,250,0.8);
+      margin-bottom: 10px;
+    }
+
+    .tldr-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tldr-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.5;
+    }
+
+    .tldr-list li span.icon { flex-shrink: 0; }
+
+    /* Sections */
+    .policy-section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 12px;
+    }
+
+    ul {
+      margin: 0 0 12px 0;
+      padding-left: 20px;
+    }
+
+    ul li {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 4px;
+    }
+
+    a { color: rgba(96,165,250,0.9); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    /* i18n */
+    body.en [data-lang="zh"] { display: none; }
+    body.zh [data-lang="en"] { display: none; }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body class="en">
+
+  <div class="lang-bar">
+    <div class="lang-bar-left">
+      <a href="index.html" data-lang="en">← NotchDrop</a>
+      <a href="index.html" data-lang="zh">← NotchDrop</a>
+    </div>
+    <div class="lang-btns">
+      <button class="lang-btn active" onclick="setLang('en')" id="btn-en">English</button>
+      <button class="lang-btn" onclick="setLang('zh')" id="btn-zh">繁中</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div class="page-label" data-lang="en">Legal</div>
+    <div class="page-label" data-lang="zh">法律聲明</div>
+
+    <h1 data-lang="en">Privacy Policy</h1>
+    <h1 data-lang="zh">隱私權政策</h1>
+
+    <p class="last-updated" data-lang="en">Last updated: February 2025</p>
+    <p class="last-updated" data-lang="zh">最後更新：2025 年 2 月</p>
+
+    <!-- TL;DR -->
+    <div class="tldr">
+      <div class="tldr-title" data-lang="en">TL;DR — The short version</div>
+      <div class="tldr-title" data-lang="zh">簡單說就是</div>
+      <ul class="tldr-list">
+        <li><span class="icon">✅</span><span data-lang="en">All your data (todos, notes, files) stays <strong>only on your Mac</strong>.</span><span data-lang="zh">你的所有資料（待辦、筆記、檔案）<strong>只儲存在你的 Mac 上</strong>。</span></li>
+        <li><span class="icon">✅</span><span data-lang="en">We <strong>never collect, transmit, or sell</strong> your personal data.</span><span data-lang="zh">我們<strong>從不收集、傳送或出售</strong>你的個人資料。</span></li>
+        <li><span class="icon">✅</span><span data-lang="en">AI features use <strong>your own API key</strong> — we never see your notes.</span><span data-lang="zh">AI 功能使用<strong>你自己的 API 金鑰</strong>，我們永遠看不到你的筆記。</span></li>
+        <li><span class="icon">✅</span><span data-lang="en">No account required. No sign-up. No tracking.</span><span data-lang="zh">無需帳號，無需註冊，無追蹤。</span></li>
+        <li><span class="icon">✅</span><span data-lang="en">App Store purchase handled entirely by Apple.</span><span data-lang="zh">App Store 購買完全由 Apple 處理。</span></li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="policy-section">
+      <h2 data-lang="en">1. Who We Are</h2>
+      <h2 data-lang="zh">1. 我們是誰</h2>
+      <p data-lang="en">NotchDrop is a macOS productivity application. We are an independent developer committed to building tools that respect your privacy.</p>
+      <p data-lang="zh">NotchDrop 是一款 macOS 生產力應用程式。我們是致力於打造尊重隱私工具的獨立開發者。</p>
+      <p data-lang="en">Contact: <a href="mailto:support@notchdrop.app">support@notchdrop.app</a></p>
+      <p data-lang="zh">聯絡我們：<a href="mailto:support@notchdrop.app">support@notchdrop.app</a></p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 2 -->
+    <div class="policy-section">
+      <h2 data-lang="en">2. Data We Collect (Spoiler: None)</h2>
+      <h2 data-lang="zh">2. 我們收集的資料（劇透：無）</h2>
+      <p data-lang="en">NotchDrop does not collect, transmit, or store any personal information on external servers.</p>
+      <p data-lang="zh">NotchDrop 不會在外部伺服器收集、傳送或儲存任何個人資訊。</p>
+      <p data-lang="en">Specifically, we do <strong>not</strong> collect:</p>
+      <p data-lang="zh">具體而言，我們<strong>不會</strong>收集：</p>
+      <ul>
+        <li data-lang="en">Your todos, notes, or file names</li>
+        <li data-lang="zh">你的待辦事項、筆記或檔案名稱</li>
+        <li data-lang="en">Device identifiers or usage analytics</li>
+        <li data-lang="zh">裝置識別碼或使用分析資料</li>
+        <li data-lang="en">Crash reports or diagnostics (unless you explicitly opt-in via macOS)</li>
+        <li data-lang="zh">崩潰報告或診斷資料（除非你透過 macOS 明確選擇加入）</li>
+        <li data-lang="en">IP addresses or location data</li>
+        <li data-lang="zh">IP 位址或位置資料</li>
+        <li data-lang="en">Any other personally identifiable information</li>
+        <li data-lang="zh">任何其他可識別個人身份的資訊</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 3 -->
+    <div class="policy-section">
+      <h2 data-lang="en">3. Where Your Data Is Stored</h2>
+      <h2 data-lang="zh">3. 你的資料儲存在哪裡</h2>
+      <p data-lang="en">All data created in NotchDrop — including todos, notes, and temporary file references — is stored locally in a SQLite database in your Mac's Application Support folder:</p>
+      <p data-lang="zh">NotchDrop 中建立的所有資料，包括待辦事項、筆記和暫存檔案參照，都儲存在你 Mac 的「Application Support」資料夾中的 SQLite 資料庫：</p>
+      <p style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 8px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">~/Library/Application Support/NotchDrop/</p>
+      <p data-lang="en">This data never leaves your device. You can delete all data by uninstalling the app or manually removing this folder.</p>
+      <p data-lang="zh">這些資料永遠不會離開你的裝置。你可以透過卸載應用程式或手動刪除此資料夾來刪除所有資料。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 4 -->
+    <div class="policy-section">
+      <h2 data-lang="en">4. AI Features &amp; API Keys</h2>
+      <h2 data-lang="zh">4. AI 功能與 API 金鑰</h2>
+      <p data-lang="en">NotchDrop offers optional AI note summarization powered by third-party AI services (such as OpenAI or Anthropic). This feature uses a <strong>Bring Your Own Key (BYOK)</strong> model:</p>
+      <p data-lang="zh">NotchDrop 提供可選的 AI 筆記摘要功能，由第三方 AI 服務（例如 OpenAI 或 Anthropic）提供支援。此功能採用<strong>自帶金鑰（BYOK）</strong>模式：</p>
+      <ul>
+        <li data-lang="en">You provide your own API key in Settings.</li>
+        <li data-lang="zh">你在設定中提供自己的 API 金鑰。</li>
+        <li data-lang="en">The API key is stored securely in your Mac's Keychain, never on our servers.</li>
+        <li data-lang="zh">API 金鑰安全地儲存在你的 Mac 鑰匙圈中，絕不會儲存在我們的伺服器上。</li>
+        <li data-lang="en">When you use AI summarization, your note content is sent <strong>directly from your Mac to the AI provider</strong> (e.g., OpenAI). NotchDrop does not act as an intermediary.</li>
+        <li data-lang="zh">使用 AI 摘要時，你的筆記內容會<strong>直接從你的 Mac 傳送給 AI 提供者</strong>（例如 OpenAI）。NotchDrop 不作為中間人。</li>
+        <li data-lang="en">Please review the privacy policy of the AI provider you choose to use.</li>
+        <li data-lang="zh">請查閱你所選擇的 AI 提供者的隱私權政策。</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 5 -->
+    <div class="policy-section">
+      <h2 data-lang="en">5. Purchases &amp; Payments</h2>
+      <h2 data-lang="zh">5. 購買與付款</h2>
+      <p data-lang="en">NotchDrop Pro is sold exclusively through the Mac App Store. All purchase transactions, billing, and payment processing are handled entirely by Apple. We do not collect or have access to any payment information.</p>
+      <p data-lang="zh">NotchDrop Pro 僅透過 Mac App Store 銷售。所有購買交易、帳單和付款處理完全由 Apple 負責。我們不收集或存取任何付款資訊。</p>
+      <p data-lang="en">For billing questions, please contact Apple Support or visit your Apple ID account settings.</p>
+      <p data-lang="zh">如有帳單問題，請聯絡 Apple 客服或訪問你的 Apple ID 帳號設定。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 6 -->
+    <div class="policy-section">
+      <h2 data-lang="en">6. Third-Party Services</h2>
+      <h2 data-lang="zh">6. 第三方服務</h2>
+      <p data-lang="en">NotchDrop does not integrate with any third-party analytics, advertising, or tracking services.</p>
+      <p data-lang="zh">NotchDrop 不整合任何第三方分析、廣告或追蹤服務。</p>
+      <p data-lang="en">The only network connections NotchDrop may make are:</p>
+      <p data-lang="zh">NotchDrop 可能建立的唯一網路連線為：</p>
+      <ul>
+        <li data-lang="en">To an AI provider API endpoint (only when you use AI features with your own key)</li>
+        <li data-lang="zh">連接到 AI 提供者的 API 端點（僅在你使用自己的金鑰啟用 AI 功能時）</li>
+        <li data-lang="en">To Apple's StoreKit servers for purchase validation (handled by the OS)</li>
+        <li data-lang="zh">連接到 Apple 的 StoreKit 伺服器進行購買驗證（由作業系統處理）</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 7 -->
+    <div class="policy-section">
+      <h2 data-lang="en">7. Children's Privacy</h2>
+      <h2 data-lang="zh">7. 兒童隱私</h2>
+      <p data-lang="en">NotchDrop does not knowingly collect any information from children under 13 years of age. Since we collect no personal data from anyone, this is satisfied by default.</p>
+      <p data-lang="zh">NotchDrop 不會刻意向 13 歲以下的兒童收集任何資訊。由於我們不從任何人收集個人資料，這項要求已自動滿足。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 8 -->
+    <div class="policy-section">
+      <h2 data-lang="en">8. Changes to This Policy</h2>
+      <h2 data-lang="zh">8. 政策變更</h2>
+      <p data-lang="en">We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated date. Continued use of NotchDrop after changes constitutes acceptance of the updated policy.</p>
+      <p data-lang="zh">我們可能會不定期更新本隱私權政策。任何變更都會反映在本頁面上並更新日期。繼續使用 NotchDrop 即表示接受更新後的政策。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 9 -->
+    <div class="policy-section">
+      <h2 data-lang="en">9. Contact Us</h2>
+      <h2 data-lang="zh">9. 聯絡我們</h2>
+      <p data-lang="en">If you have any questions about this Privacy Policy, please contact us:</p>
+      <p data-lang="zh">如果你對本隱私權政策有任何疑問，請聯絡我們：</p>
+      <p><a href="mailto:support@notchdrop.app">support@notchdrop.app</a></p>
+    </div>
+
+  </div>
+
+  <footer data-lang="en">© 2025 NotchDrop. All rights reserved.</footer>
+  <footer data-lang="zh">© 2025 NotchDrop。保留所有權利。</footer>
+
+  <script>
+    function setLang(lang) {
+      document.body.className = lang;
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    }
+
+    (function() {
+      const lang = navigator.language || navigator.userLanguage || 'en';
+      if (lang.startsWith('zh')) setLang('zh');
+    })();
+  </script>
+</body>
+</html>
